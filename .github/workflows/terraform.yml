@@ -46,9 +46,8 @@ name: 'Build & Deploy Infrastructure'
 
 on:
   push:
-    branches:
-    - "main"
   workflow_dispatch:
+
 
 permissions:
   contents: read
@@ -58,7 +57,7 @@ env:
   AWS_REGION: eu-west-2
 
 jobs:
-  terraform_plan:
+  tf_format_and_validate:
     runs-on: ubuntu-latest
     defaults: 
       run:
@@ -81,22 +80,17 @@ jobs:
 
 
     # Install the latest version of Terraform CLI 
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v2
+    - name: terraform validate
+      id: validate
+      uses: dflook/terraform-validate@v1
       with:
-        terraform_version: 1.2.8
+        path: terraform
+        backend_config_file: terraform/config/backends/test.backend
+    
+    - name: Validate failed
+      if: ${{ failure() && steps.validate.outputs.failure-reason == 'validate-failed' }}
+      run: echo "terraform validate failed"
 
-    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
-    - name: Terraform Init
-      run: terraform init
-
-    # Checks that all Terraform configuration files adhere to a canonical format
-    - name: Terraform Format
-      run: terraform fmt -check
-
-    # Generates an execution plan for Terraform
-    - name: Terraform Plan
-      run: echo "Terraform plan running"
 
 
 
