@@ -73,72 +73,72 @@ jobs:
       - name: step1
         run: echo ${{ needs.get_branch.outputs.branch_name }}
 
-  # validate:
-  #   name: Validate Terraform Code
-  #   runs-on: ubuntu-latest
-  #   defaults: 
-  #     run:
-  #       working-directory: terraform
-  #       # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
-  #       shell: bash 
+  validate:
+    name: Validate Terraform Code
+    runs-on: ubuntu-latest
+    defaults: 
+      run:
+        working-directory: terraform
+        # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+        shell: bash 
     
-  #   steps:
-  #   # Checkout the repository to the GitHub Actions runner
-  #   - name: Checkout
-  #     uses: actions/checkout@v3
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v3
 
-  #   # Setup AWS Connection   
-  #   - name: Connect to AWS 
-  #     uses: aws-actions/configure-aws-credentials@v1
-  #     with: 
-  #       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} 
-  #       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #       aws-region:  ${{env.AWS_REGION}}
+    # Setup AWS Connection   
+    - name: Connect to AWS 
+      uses: aws-actions/configure-aws-credentials@v1
+      with: 
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} 
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region:  ${{env.AWS_REGION}}
 
 
-  #   # Install the latest version of Terraform CLI 
-  #   - name: terraform validate
-  #     id: validate
-  #     uses: dflook/terraform-validate@v1
-  #     with:
-  #       path: terraform
-  #       backend_config_file: terraform/config/backends/test.backend
+    # Install the latest version of Terraform CLI 
+    - name: terraform validate
+      id: validate
+      uses: dflook/terraform-validate@v1
+      with:
+        path: terraform
+        backend_config_file: terraform/config/backends/test.backend
     
-  #   - name: Validate failed
-  #     if: ${{ failure() && steps.validate.outputs.failure-reason == 'validate-failed' }}
-  #     run: echo "terraform validate failed"
+    - name: Validate failed
+      if: ${{ failure() && steps.validate.outputs.failure-reason == 'validate-failed' }}
+      run: echo "terraform validate failed"
 
-  # plan:
-  #   runs-on: ubuntu-latest
-  #   needs: validate
-  #   name: Create Terraform Plan
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
+  plan:
+    runs-on: ubuntu-latest
+    needs: validate
+    name: Create Terraform Plan
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-  #    # Setup AWS Connection   
-  #     - name: Connect to AWS 
-  #       uses: aws-actions/configure-aws-credentials@v1
-  #       with: 
-  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} 
-  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #         aws-region:  ${{env.AWS_REGION}}
+     # Setup AWS Connection   
+      - name: Connect to AWS 
+        uses: aws-actions/configure-aws-credentials@v1
+        with: 
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} 
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region:  ${{env.AWS_REGION}}
       
 
-  #     - name: Use branch workspace
-  #       uses: dflook/terraform-new-workspace@v1
-  #       with:
-  #         path: terraform
-  #         workspace: ${{ github.ref_name }}
-  #         backend_config_file: terraform/config/backends/test.backend
+      - name: Use branch workspace
+        uses: dflook/terraform-new-workspace@v1
+        with:
+          path: terraform
+          workspace: ${{ needs.get_branch.outputs.branch_name }}
+          backend_config_file: terraform/config/backends/test.backend
       
-  #     - name: terraform plan
-  #       uses: dflook/terraform-plan@v1
-  #       with:
-  #         path: terraform
-  #         workspace: ${{ github.ref_name }}
-  #         backend_config_file: terraform/config/backends/test.backend
-  #         add_github_comment: false
+      - name: terraform plan
+        uses: dflook/terraform-plan@v1
+        with:
+          path: terraform
+          workspace: ${{ needs.get_branch.outputs.branch_name }}
+          backend_config_file: terraform/config/backends/test.backend
+          add_github_comment: false
 
           
 
