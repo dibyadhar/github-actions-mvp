@@ -64,9 +64,7 @@ jobs:
       branch_name: ${{ steps.get_name.outputs.branch }}
     steps:
       - id: get_name
-        run: |
-          $name=$(echo $GITHUB_REF_NAME | cut -d '/' -f2)
-          echo "::set-output name=branch::$name"
+        run: echo "::set-output name=branch::$$(echo $GITHUB_REF_NAME | cut -d '/' -f2)"
         
   display_branch:
     runs-on: ubuntu-latest
