@@ -65,7 +65,7 @@ jobs:
     steps:
       - id: get_name
         run: |
-          $name = $(echo $GITHUB_REF_NAME | cut -d '/' -f2)
+          $name=$(echo $GITHUB_REF_NAME | cut -d '/' -f2)
           echo "::set-output name=branch::$name"
         
   display_branch:
