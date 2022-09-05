@@ -65,7 +65,7 @@ jobs:
       branch_name: ${{ steps.step1.outputs.test }}
     steps:
       - id: step1
-        run: echo  echo $github.ref_name | cut -d '/' -f2
+        run: echo $GITHUB_REF_NAME | cut -d '/' -f2
         
 
 
