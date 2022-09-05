@@ -59,15 +59,20 @@ env:
 jobs:
 
   get_branch:
-    name: Get Branch name
     runs-on: ubuntu-latest
     outputs:
-      branch_name: ${{ steps.step1.outputs.test }}
+      branch_name: ${{ steps.get_name.outputs.branch }}
     steps:
-      - id: step1
-        run: echo $GITHUB_REF_NAME | cut -d '/' -f2
+      - id: get_name
+        run: |
+          $name = $(echo $GITHUB_REF_NAME | cut -d '/' -f2)
+          echo "::set-output name=branch::$name"
         
-
+  display_branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: step1
+        run: echo ${{ needs.get_branch.outputs.branch_name }}
 
   # validate:
   #   name: Validate Terraform Code
