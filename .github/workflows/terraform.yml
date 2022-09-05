@@ -57,7 +57,7 @@ env:
   AWS_REGION: eu-west-2
 
 jobs:
-  tf_format_and_validate:
+  validate:
     runs-on: ubuntu-latest
     defaults: 
       run:
@@ -90,6 +90,27 @@ jobs:
     - name: Validate failed
       if: ${{ failure() && steps.validate.outputs.failure-reason == 'validate-failed' }}
       run: echo "terraform validate failed"
+
+
+
+  plan:
+    runs-on: ubuntu-latest
+    name: Create terraform plan
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: terraform plan
+        uses: dflook/terraform-plan@v1
+        with:
+          path: terraform
+          label: production
+          workspace: test
+          backend_config_file: terraform/config/backends/test.backend
+          add_github_comment: false
+          
+          
+
 
 
 
