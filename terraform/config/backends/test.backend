@@ -2,5 +2,5 @@ bucket               = "dataplatform-terraform-state-bucket"
 region               = "eu-west-2"
 key                  = "test.tfstate"
 workspace_key_prefix = "test"
-dynamodb_table       = "dynamo-ew2-terraform-eks-infra-dev-terraform-state-lock"
+dynamodb_table       = "dataplatform-terraform-state-lock"
 encrypt              = true

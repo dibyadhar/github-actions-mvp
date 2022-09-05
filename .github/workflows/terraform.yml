@@ -115,14 +115,14 @@ jobs:
         uses: dflook/terraform-new-workspace@v1
         with:
           path: terraform
-          workspace: ${{ github.head_ref }}
+          workspace: ${{ github.ref_name }}
           backend_config_file: terraform/config/backends/test.backend
       
       - name: terraform plan
         uses: dflook/terraform-plan@v1
         with:
           path: terraform
-          workspace: ${{github.ref_name}}
+          workspace: ${{ github.ref_name }}
           backend_config_file: terraform/config/backends/test.backend
           add_github_comment: false
 
