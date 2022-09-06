@@ -133,6 +133,14 @@ jobs:
           workspace: ${{ needs.get_branch.outputs.branch_name }}
           backend_config_file: terraform/config/backends/test.backend
       
+      - uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ github.TOKEN }}
+          approvers: "dibyadhar"
+          minimum-approvals: 1
+          timeout-minutes: 60
+
+      
       - name: terraform plan
         uses: dflook/terraform-plan@v1
         with:
@@ -141,8 +149,8 @@ jobs:
           backend_config_file: terraform/config/backends/test.backend
           add_github_comment: false
 
-          
-
+      
+      
 
 
 
