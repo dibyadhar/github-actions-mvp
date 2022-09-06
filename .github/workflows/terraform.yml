@@ -138,7 +138,6 @@ jobs:
           secret: ${{ github.TOKEN }}
           approvers: "dibyadhar"
           minimum-approvals: 1
-          timeout-minutes: 60
 
       
       - name: terraform plan
