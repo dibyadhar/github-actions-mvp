@@ -42,10 +42,14 @@
 #       with:
 #         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-name: 'Build & Deploy Infrastructure'
+name: 'Plan Infrastructure'
 
 on:
   push:
+    branches:
+      - "feature/**"
+      - "bugfix/**"
+ 
   workflow_dispatch:
 
 
@@ -61,17 +65,17 @@ jobs:
   get_branch:
     runs-on: ubuntu-latest
     outputs:
-      branch_name: ${{ steps.get_name.outputs.branch }}
+      branch_suffix: ${{ steps.get_suffix.outputs.branch }}
     steps:
-      - id: get_name
+      - id: get_suffix
         run: echo "::set-output name=branch::$(echo $GITHUB_REF_NAME | cut -d '/' -f2)"
         
-  display_branch:
-    needs: get_branch
-    runs-on: ubuntu-latest
-    steps:
-      - name: step1
-        run: echo ${{ needs.get_branch.outputs.branch_name }}
+  # display_branch:
+  #   needs: get_branch
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: step1
+  #       run: echo ${{ needs.get_branch.outputs.branch_suffix }}
 
   validate: 
     name: Validate Terraform Code
@@ -130,22 +134,14 @@ jobs:
         uses: dflook/terraform-new-workspace@v1
         with:
           path: terraform
-          workspace: ${{ needs.get_branch.outputs.branch_name }}
+          workspace: ${{ needs.get_branch.outputs.branch_suffix }}
           backend_config_file: terraform/config/backends/test.backend
       
-      - uses: macnev2013/manual-approval@latest
-        with:
-          secret: ${{ github.TOKEN }}
-          approvers: "dibyadhar"
-          minimum-approvals: 1
-          issue-title: 'Manual Approval'
-
-      
-      - name: terraform plan
+      - name: terraform plan network
         uses: dflook/terraform-plan@v1
         with:
-          path: terraform
-          workspace: ${{ needs.get_branch.outputs.branch_name }}
+          path: terraform/network
+          workspace: ${{ needs.get_branch.outputs.branch_suffix }}
           backend_config_file: terraform/config/backends/test.backend
           add_github_comment: false
 
