@@ -1,0 +1,52 @@
+name: 'Test cd-oidc'
+
+on:
+  push:
+  workflow_dispatch:
+  
+  pull_request:
+    branches: [main]
+
+
+permissions:
+  id-token: write
+  contents: read
+
+# Configure global environment values
+env:
+  AWS_REGION: eu-west-2
+
+jobs:
+  validate:
+    name: Validate Terraform Code
+    runs-on: ubuntu-latest
+    defaults: 
+      run:
+        working-directory: terraform
+        # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+        shell: bash 
+    
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    # Setup AWS Connection   
+    - name: Connect to AWS 
+      uses: aws-actions/configure-aws-credentials@v1
+      with: 
+        role-to-assume: arn:aws:iam::307360494594:role/terraform-infrastructure-deployment
+        role-session-name: terraform-validate
+        aws-region: ${{env.AWS_REGION}}
+
+    # Install the latest version of Terraform CLI 
+    - name: terraform validate
+      id: validate
+      uses: dflook/terraform-validate@v1
+      with:
+        path: terraform/${{matrix.tf_dir}}
+        backend_config_file: terraform/config/backends/test.backend
+    
+    - name: Validate failed
+      if: ${{ failure() && steps.validate.outputs.failure-reason == 'validate-failed' }}
+      run: echo "terraform validate failed"
