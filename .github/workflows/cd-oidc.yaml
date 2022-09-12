@@ -37,3 +37,5 @@ jobs:
         role-to-assume: arn:aws:iam::307360494594:role/terraform-infrastructure-deployment
         role-session-name: terraform-validate
         aws-region: ${{env.AWS_REGION}}
+
+    - run: aws s3 ls
