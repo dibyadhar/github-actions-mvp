@@ -34,8 +34,9 @@ jobs:
     - name: Connect to AWS 
       uses: aws-actions/configure-aws-credentials@v1
       with: 
-        role-to-assume: arn:aws:iam::307360494594:role/terraform-infrastructure-deployment
+        role-to-assume: arn:aws:iam::111788162356:role/infrastructure-deployer-nonprod
         role-session-name: terraform-validate
         aws-region: ${{env.AWS_REGION}}
-
-    - run: aws s3 ls
+    
+    - name: Verify Caller Identity
+      run: aws sts get-caller-identity
