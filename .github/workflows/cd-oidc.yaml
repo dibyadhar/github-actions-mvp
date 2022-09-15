@@ -37,6 +37,8 @@ jobs:
         role-to-assume: arn:aws:iam::111788162356:role/infrastructure-deployer-nonprod
         role-session-name: terraform-validate
         aws-region: ${{env.AWS_REGION}}
+        mask-aws-account-id: false
     
     - name: Verify Caller Identity
       run: aws sts get-caller-identity
+
