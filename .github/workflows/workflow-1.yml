@@ -16,10 +16,7 @@ on:
         required: true
   push:
   
-permissions:
-  id-token: write             # This is required for requesting the JWT
-  contents: read              # Configure global environment values
-  actions: write
+permissions: write-all
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
