@@ -2,8 +2,7 @@
 
 name: Reusable Workflow
 
-# Controls when the action will run. Workflow runs when manually triggered using the UI
-# or API.
+
 on:
   workflow_call:
     # Inputs the workflow accepts.
@@ -16,15 +15,13 @@ on:
         required: true
         type: string
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+
 jobs:
-  # This workflow contains a single job called "greet"
-  greet:
-    # The type of runner that the job will run on
+
+  display_message:
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Runs a single command using the runners shell
     - name: Send greeting
-      run: echo "Hello ${{ inputs.message }}"
+      run: echo "${{ inputs.message }}"
