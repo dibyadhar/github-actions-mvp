@@ -6,20 +6,26 @@ name: Caller Workflow
 on:
   workflow_dispatch:
 env:
-  ENV_VAR: my_env_var_msg
+  ENV_VAR_1: my_first_env_var_msg
+  ENV_VAR_2: my_second_env_var_msg
   
 jobs:
   env_setup:
     name: Setup Dynamic Environment Variables
     runs-on: ubuntu-latest
     outputs: 
+      env_var_1: ${{ steps.value-1.outputs.env_var_1 }}
+      env_var_2: ${{ steps.value-1.outputs.env_var_2 }}
     steps:
       - name: set outputs with default values
         id: value-1
-        run: echo "build-and-verify=${{ github.event.inputs.build-and-verify || 'true' }}" >> $GITHUB_OUTPUT
+        run: |
+          echo "env_var_1=${{ env.ENV_VAR_1 }}" >> $GITHUB_OUTPUT
+          echo "env_var_2=${{ env.ENV_VAR_2 }}" >> $GITHUB_OUTPUT
   
   # This workflow contains a job called "greet" which calls a reusable workflow named "called-workflow.yml"
   greet:
     uses: "./.github/workflows/called-workflow.yml"
+    needs: env_setup
     with:
-      message: ${{ var.my_env_var }}
+      message: ${{ needs.env_setup.outputs.env_var_1}}
