@@ -1,14 +1,16 @@
-# This is a basic workflow that demonstrates use of  reusable workflow
+# This is a basic workflow that demonstrates use of reusable workflow.
 # This workflows calls another reusable workflow and pass input parameters to it.
 
 name: Caller Workflow
 
 on:
   workflow_dispatch:
-
+env:
+  ENV_VAR: my_env_var_msg
+  
 jobs:
-  # This workflow contains a single job called "greet"
+  # This workflow contains a job called "greet" which calls a reusable workflow named "called-workflow.yml"
   greet:
     uses: "./.github/workflows/called-workflow.yml"
     with:
-      message: "Hello from Dibya"
+      message: ${{ var.my_env_var }}
