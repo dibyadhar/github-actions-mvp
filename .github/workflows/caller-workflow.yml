@@ -9,6 +9,15 @@ env:
   ENV_VAR: my_env_var_msg
   
 jobs:
+  env_setup:
+    name: Setup Dynamic Environment Variables
+    runs-on: ubuntu-latest
+    outputs: 
+    steps:
+      - name: set outputs with default values
+        id: value-1
+        run: echo "build-and-verify=${{ github.event.inputs.build-and-verify || 'true' }}" >> $GITHUB_OUTPUT
+  
   # This workflow contains a job called "greet" which calls a reusable workflow named "called-workflow.yml"
   greet:
     uses: "./.github/workflows/called-workflow.yml"
