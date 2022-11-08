@@ -1,6 +1,4 @@
-# This is a basic workflow that is manually triggered
-
-name: workflow 1
+name: Caller Workflow
 
 on:
   workflow_dispatch:
@@ -14,8 +12,11 @@ on:
         # Input has to be provided for the workflow to run
         required: true
   push:
+  
+env:
+  ENV_VAR: env_value
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+
 jobs:
   
   # This workflow contains a single job called "greet"
@@ -25,17 +26,16 @@ jobs:
     
     permissions: write-all
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Runs a single command using the runners shell
     - name: Send greeting
       run: echo "Hello ${{ github.event.inputs.name }}"
       
-    - name: Trigger next workflow
-      if: success()
-      uses: peter-evans/repository-dispatch@v1
-      with:
-        token: ${{ secrets.GITHUB_TOKEN}}
-        repository: ${{ github.repository }}
-        event-type: trigger-workflow-2
-        client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
+#     - name: Trigger next workflow
+#       if: success()
+#       uses: peter-evans/repository-dispatch@v1
+#       with:
+#         token: ${{ secrets.GITHUB_TOKEN}}
+#         repository: ${{ github.repository }}
+#         event-type: trigger-workflow-2
+#         client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
