@@ -28,4 +28,4 @@ jobs:
     uses: "./.github/workflows/called-workflow.yml"
     needs: env_setup
     with:
-      message: ${{ needs.env_setup.outputs.env_var_1}}
+      message: ${{ needs.env_setup.outputs.env_var_2}}
