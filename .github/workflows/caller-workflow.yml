@@ -1,10 +1,10 @@
 # This is a basic workflow that demonstrates use of  reusable workflow
+# This workflows calls another reusable workflow and pass input parameters to it.
 
 name: Caller Workflow
 
 on:
   workflow_dispatch:
-  push:
 
 jobs:
   # This workflow contains a single job called "greet"
