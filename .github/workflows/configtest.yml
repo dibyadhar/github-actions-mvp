@@ -28,16 +28,39 @@ jobs:
           java-version: '20'
 
 
-      - name: Compare changes in config folder with previous commit
+      - name: Compare changes in config folder and find tests
         run: |
+          # Check the number of commits
+          COMMITS_COUNT=$(git rev-list --count HEAD)
+
+          if [ "$COMMITS_COUNT" -le 1 ]; then
+            echo "This is the first commit or there's no previous commit to compare with."
+            exit 0
+          fi
+          
           # Get a list of changed files in the config folder
           CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD -- config/)
         
           # Check if any file in the config folder has changed
           if [ -z "$CHANGED_FILES" ]; then
             echo "No changes detected in the config folder."
+            exit 0
           else
           echo "Changed files in the config folder:"
           echo "$CHANGED_FILES"
-          # You can add any steps here that should be executed when there are changes in the config folder
+          
+          # Map changed files to equivalent tests in config-test
+          echo "Equivalent test files in config-test folder:"
+          for file in $CHANGED_FILES; do
+          # Transform filename from alpha_something.json to AlphaSomething.java
+
+          BASENAME=$(basename "$file" .json)
+          TEST_NAME=$(echo "$BASENAME" | sed -r 's/(^|_)([a-z])/\U\2/g')
+          TEST_FILE="config-test/$TEST_NAME.java"
+
+          if [ -f "$TEST_FILE" ]; then
+            echo "$TEST_FILE exists!"
+          else
+            echo "$TEST_FILE does not exist!"
           fi
+          done
