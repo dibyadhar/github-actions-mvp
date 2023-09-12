@@ -21,3 +21,18 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '20'
+
+
+      - name: Compare changes in config folder with previous commit
+        run: |
+          # Get a list of changed files in the config folder
+          CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD -- config/)
+        
+          # Check if any file in the config folder has changed
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "No changes detected in the config folder."
+          else
+          echo "Changed files in the config folder:"
+          echo "$CHANGED_FILES"
+          # You can add any steps here that should be executed when there are changes in the config folder
+          fi
