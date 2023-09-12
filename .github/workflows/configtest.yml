@@ -1,5 +1,8 @@
 name: Config Test Workflow
 on:
+  push:
+    branches:
+      - main
   pull_request:
     paths:
       - 'config/**.json'
