@@ -30,6 +30,14 @@ jobs:
 
       - name: Compare changes in config folder with previous commit
         run: |
+            # Check the number of commits
+            COMMITS_COUNT=$(git rev-list --count HEAD) 
+
+            if [ "$COMMITS_COUNT" -le 1 ]; then
+              echo "This is the first commit or there's no previous commit to compare with."
+              exit 0
+            fi
+
             # Get a list of changed files in the config folder
             CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD -- config/)
           
