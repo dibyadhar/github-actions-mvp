@@ -5,6 +5,8 @@ on:
       - 'config/**.json'
       - 'config-tests/**.java'
 
+  workflow_dispatch:
+
 jobs:
   run_tests:
     name: Run Associated Tests
